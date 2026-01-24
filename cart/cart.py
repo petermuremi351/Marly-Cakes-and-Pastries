@@ -1,6 +1,7 @@
 
 class Cart():
     def __init__(self, request):
+        self.session = request.session
         
         # get the current session key if it exists
         cart = self.session.get('session_key')
