@@ -40,6 +40,10 @@ class Cart():
 
         # return the looked up products
         return products
+    
+    def get_quants(self):
+        quantities = self.cart
+        return quantities
 
 
             
