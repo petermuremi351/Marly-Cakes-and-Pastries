@@ -6,32 +6,51 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm
 from django import forms
+from django.db.models import Q
+
+
+def search(request):
+    # determine if they filled the form
+    if request.method == "POST":
+        searched = request.POST['searched']
+        # Querry the products DB model
+        searched = Product.objects.filter(Q(name__icontains=searched) | Q(description__icontains=searched))
+        # test for null
+        if not searched:
+            messages.success(request, "That Product Does Not Exist...Please try again later")
+            return render(request, "search.html", {})
+        else:
+            return render(request, "search.html", {'searched':searched})
+    else:return render(request, "search.html", {})
+    
 
 
 def update_password(requst):
     if requst.user.is_authenticated:
         current_user = requst.user
         # did they fill out the form
-        if requst.method == 'POST':
+        if requst.method == "POST":
             form = ChangePasswordForm(current_user, requst.POST)
             # is the form valid
             if form.is_valid():
                 form.save()
-                messages.success(requst, "Your password Has Been Updated, Please Log In Again...")
+                messages.success(
+                    requst, "Your password Has Been Updated, Please Log In Again..."
+                )
                 # login(requst, current_user)
-                return redirect('login')
+                return redirect("login")
             else:
                 for error in list(form.errors.values()):
                     messages.error(requst, error)
-                    return redirect('update_password')
-
+                    return redirect("update_password")
 
         else:
             form = ChangePasswordForm(current_user)
-            return render(requst, "update_password.html", {'form':form})
+            return render(requst, "update_password.html", {"form": form})
     else:
         messages.success(requst, "You Must Be Logged In To View That Page!!")
-        return redirect('home')
+        return redirect("home")
+
 
 def update_user(request):
     if request.user.is_authenticated:
@@ -43,34 +62,39 @@ def update_user(request):
 
             login(request, current_users)
             messages.success(request, "User has Been Updated!")
-            return redirect('home')
-        return render(request, "update_user.html", {'user_form':user_form})
+            return redirect("home")
+        return render(request, "update_user.html", {"user_form": user_form})
     else:
         messages.success(request, "You Must Be Logged In To Access That Page!!")
-        return redirect('home')
-
+        return redirect("home")
 
 
 def category_summary(request):
     categories = Category.objects.all()
-    return render(request, 'category_summary.html', {"categories":categories})
+    return render(request, "category_summary.html", {"categories": categories})
+
 
 def category(request, foo):
     # Replace hyphens with spaces
-    foo = foo.replace('-', ' ')
+    foo = foo.replace("-", " ")
     # grab category from url
     try:
         # look up the category
         category = Category.objects.get(name=foo)
         products = Product.objects.filter(category=category)
-        return render(request, 'category.html', {'products':products, 'category':category})
+        return render(
+            request, "category.html", {"products": products, "category": category}
+        )
 
     except:
         messages.success(request, ("That Category Doesn't Exist..."))
-        return redirect('home')
-def product(request,pk):
+        return redirect("home")
+
+
+def product(request, pk):
     product = Product.objects.get(id=pk)
-    return render(request, 'product.html', {'product':product})
+    return render(request, "product.html", {"product": product})
+
 
 def home(request):
     products = Product.objects.all()
@@ -83,24 +107,25 @@ def about(request):
 
 def login_user(request):
     if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST["username"]
+        password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             messages.success(request, ("You have been logged in!"))
-            return redirect('home')
+            return redirect("home")
         else:
             messages.success(request, ("There was an error, please try again..."))
-            return redirect('login')
-        
+            return redirect("login")
+
     else:
-        return render(request, 'login.html', {})
+        return render(request, "login.html", {})
+
 
 def logout_user(request):
     logout(request)
-    messages.success(request,("You have been logged out!"))
-    return redirect('home')
+    messages.success(request, ("You have been logged out!"))
+    return redirect("home")
 
 
 def register_user(request):
@@ -109,16 +134,18 @@ def register_user(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-            # log in 
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password1"]
+            # log in
             user = authenticate(username=username, password=password)
             login(request, user)
             messages.success(request, ("You have Registered Successfully!! Welcome!"))
-            return redirect('home')
+            return redirect("home")
         else:
-            messages.success(request, ("Whoops there was a problem registering, please try again"))
-            return redirect('register')
+            messages.success(
+                request, ("Whoops there was a problem registering, please try again")
+            )
+            return redirect("register")
 
-    else:        
-        return render(request, 'register.html', {'form':form})
+    else:
+        return render(request, "register.html", {"form": form})
