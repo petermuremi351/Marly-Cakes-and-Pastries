@@ -19,19 +19,20 @@ class Cart:
         # make sure cart is available in all pages
         self.cart = cart
 
-    # def db_add(self, product, quantity):
-    #     # ,quantity
-    #     product_id = str(product)
-    #     product_qty = str(quantity)
+    def db_add(self, product, quantity):
+        # ,quantity
+        product_id = str(product)
+        product_qty = str(quantity)
 
-    #     #   logic
-    #     if product_id in self.cart:
-    #         pass
-    #     else:
-    #         # self.cart[product_id] = {'price': str(product.price)}
-    #         self.cart[product_id] = int(product_qty)
+        #   logic
+        if product_id in self.cart:
+            pass
+        else:
+            # self.cart[product_id] = {'price': str(product.price)}
+            self.cart[product_id] = int(product_qty)
 
-    #     self.session.modified = True
+        self.session.modified = True
+
     def add(self, product, quantity):
         # ,quantity
         product_id = str(product.id)
@@ -110,12 +111,14 @@ class Cart:
         thing = self.cart
 
        # deal with looged in User
-        # if self.request.user.is_authenticated:
-        #     # get the current user profile
-        #     current_user = Profile.objects.filter(user__id=self.request.user.id)
-        #     carty = str(self.cart)
-        #     carty = carty.replace("\'", "\"")
-        #     current_user.update(old_cart=str(carty))
+        if self.request.user.is_authenticated:
+            # get the current user profile
+            current_user = Profile.objects.filter(user__id=self.request.user.id)
+            carty = str(self.cart)
+            carty = carty.replace("\'", "\"")
+            # save carty to the profile model
+            current_user.update(old_cart=str(carty))
+        thing = self.cart    
         return thing
 
     def delete(self, product):
@@ -126,9 +129,11 @@ class Cart:
 
         self.session.modified = True
         # deal with looged in User
-        # if self.request.user.is_authenticated:
-        #     # get the current user profile
-        #     current_user = Profile.objects.filter(user__id=self.request.user.id)
-        #     carty = str(self.cart)
-        #     carty = carty.replace("\'", "\"")
-        #     current_user.update(old_cart=str(carty))
+        if self.request.user.is_authenticated:
+            # get the current user profile
+            current_user = Profile.objects.filter(user__id=self.request.user.id)
+            carty = str(self.cart)
+            carty = carty.replace("\'", "\"")
+            # save carty to the profile model
+            current_user.update(old_cart=str(carty))
+       
