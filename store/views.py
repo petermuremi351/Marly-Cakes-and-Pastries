@@ -7,6 +7,8 @@ from django.contrib.auth.forms import UserCreationForm
 from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UserInfoForm
 from django import forms
 from django.db.models import Q
+# import json
+# from cart.cart import Cart
 
 
 def update_info(request):
@@ -130,6 +132,30 @@ def login_user(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+
+            # # do some shopping cart stuff
+            # current_user = Profile.objects.get(user__id=request.user.id)
+            # # get their saved cart from db
+            # saved_cart = current_user.old_cart
+            # # convert db string to python dictionary
+            # if saved_cart:
+            #     # convert to dictionary using json
+            #     converted_cart = json.loads(saved_cart)
+            #     # add the loaded cart dictionary to our session
+            #     # get the cart
+            #     cart = Cart(request)
+            #     # loop tthrouhg the cart and add the items from the db
+            #     for key,value in converted_cart.items():
+            #         cart.db_add(product=key, quantity=value)
+
+
+
+
+
+
+
+
+
             messages.success(request, ("You have been logged in!"))
             return redirect("home")
         else:
@@ -157,8 +183,8 @@ def register_user(request):
             # log in
             user = authenticate(username=username, password=password)
             login(request, user)
-            messages.success(request, ("You have Registered Successfully!! Welcome!"))
-            return redirect("home")
+            messages.success(request, ("Username Created - Please Fill Out Your User Info Below... "))
+            return redirect("update_info")
         else:
             messages.success(
                 request, ("Whoops there was a problem registering, please try again")
