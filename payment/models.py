@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from store.models import Product
+from django.db.models.signals import post_save
 
 
 class ShippingAddress(models.Model):
@@ -19,8 +20,18 @@ class ShippingAddress(models.Model):
         verbose_name_plural = "Shipping Address"
 
     def __str__(self):
-        return f'Shipping Address - {str(self.id)}'
-    
+        return f"Shipping Address - {str(self.id)}"
+
+# create a user shopping address by default when user signs up
+def create_shipping(sender, instance, created, **kwargs):
+    if created:
+        user_shipping = ShippingAddress(user=instance)
+        user_shipping.save()
+
+
+# automate profile thing
+post_save.connect(create_shipping, sender=User)
+
 
 # create order model
 class Order(models.Model):
@@ -32,27 +43,25 @@ class Order(models.Model):
     date_ordered = models.DateField(auto_now_add=True)
 
     def __str__(self):
-        return f'Order - {str(self.id)}'
-
+        return f"Order - {str(self.id)}"
 
 
 # create Order items model
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, null=True,)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True,)
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.CASCADE,
+        null=True,
+    )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        null=True,
+    )
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     quantity = models.PositiveBigIntegerField(default=1)
     price = models.DecimalField(max_digits=8, decimal_places=2)
 
     def __str__(self):
-        return f'Order item - {str(self.id)}'
-
-
-
-
-
-
-
-
-
+        return f"Order item - {str(self.id)}"
