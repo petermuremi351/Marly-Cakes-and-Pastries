@@ -4,52 +4,149 @@ from payment.forms import ShippingForm, PaymentForm
 from payment.models import ShippingAddress, Order, OrderItem
 from django.contrib.auth.models import User
 from django.contrib import messages
+from store.models import Product
 
 
-def process_order(request):
-    if request.POST:
-        cart = Cart(request)
-        cart_products = cart.get_prods
-        quantities = cart.get_quants
-        totals = cart.cart_total()
-        # get billing info from last page
-        payment_form = PaymentForm(request.POST or None)
-        # get shipiping data
-        my_shipping = request.session.get('my_shipping')
-        # gather order information
-        full_name = my_shipping['shipping_full_name']
-        email = my_shipping['shipping_email']
-        # create shipping address from session info
-        shipping_address = f"{my_shipping['shipping_address1']}\n{my_shipping['shipping_address2']}\n{my_shipping['shipping_city']}\n{my_shipping['shipping_state']}\n{my_shipping['shipping_zipcode']}\n{my_shipping['shipping_country']}"
-        amount_paid = totals
+# def process_order(request):
+#     if request.POST:
+#         cart = Cart(request)
+#         cart_products = cart.get_prods
+#         quantities = cart.get_quants
+#         totals = cart.cart_total()
+#         # get billing info from last page
+#         payment_form = PaymentForm(request.POST or None)
+#         # get shipiping data
+#         my_shipping = request.session.get('my_shipping')
+#         # gather order information
+#         full_name = my_shipping['shipping_full_name']
+#         email = my_shipping['shipping_email']
+#         # create shipping address from session info
+#         shipping_address = f"{my_shipping['shipping_address1']}\n{my_shipping['shipping_address2']}\n{my_shipping['shipping_city']}\n{my_shipping['shipping_state']}\n{my_shipping['shipping_zipcode']}\n{my_shipping['shipping_country']}"
+#         amount_paid = totals
 
        
 
-        if request.user.is_authenticated:
-            # loggrd in
-            user = request.user
-            # Create an order
-            create_order = Order(user=user, full_name=full_name,email=email, shipping_address=shipping_address, amount_paid=amount_paid)
-            create_order.save()
-            messages.success(request, "Order Placed!")
-            return redirect('home')
+#         if request.user.is_authenticated:
+#             # loggrd in
+#             user = request.user
+#             # Create an order
+#             create_order = Order(user=user, full_name=full_name,email=email, shipping_address=shipping_address, amount_paid=amount_paid)
+#             create_order.save()
 
-        else:
-            # not logged
-            # create order
-            create_order = Order(user=user, full_name=full_name,email=email, shipping_address=shipping_address, amount_paid=amount_paid)
-            create_order.save()
+#             # add order items
+#             # get order id
+#             order_id = create_order.pk
+#             # get product info
+#             for product in cart_products():
+#                 # get product id
+#                 product_id = product.id
+#                 # get product price
+#                 if product.is_sale:
+#                     price = product.sale_price
+#                 else:
+#                     price = product.price  
+
+#                 # get quantity  
+#                 for key,value in quantities().items():
+#                     if int(key) == product_id:
+#                         # create order item
+#                         create_order_item = OrderItem(order_id=order_id, product_id=product_id, user=user, quantity=value, price=price)
+#                         create_order.save()
+
+            
+
+
+
+#             messages.success(request, "Order Placed!")
+#             return redirect('home')
+
+#         else:
+#             # not logged
+#             # create order
+#             create_order = Order(user=user, full_name=full_name,email=email, shipping_address=shipping_address, amount_paid=amount_paid)
+#             create_order.save()
+
+#             # add order items
+#             # get order id
+#             order_id = create_order.pk
+#             # get product info
+#             for product in cart_products():
+#                 # get product id
+#                 product_id = product.id
+#                 # get product price
+#                 if product.is_sale:
+#                     price = product.sale_price
+#                 else:
+#                     price = product.price  
+
+#                 # get quantity  
+#                 for key,value in quantities().items():
+#                     if int(key) == product_id:
+#                         # create order item
+#                         create_order_item = OrderItem(order_id=order_id, product_id=product_id, quantity=value, price=price)
+#                         create_order_item.save()
                 
 
         
+#         messages.success(request, "Order Placed!")
+#         return redirect('home')
+
+
+#     else:
+#         messages.success(request, "Access Denied")
+#         return redirect('home')
+
+def process_order(request):
+    if request.method == "POST":
+        cart = Cart(request)
+        cart_products = cart.get_prods()
+        quantities = cart.get_quants()
+        totals = cart.cart_total()
+
+        my_shipping = request.session.get('my_shipping')
+
+        full_name = my_shipping['shipping_full_name']
+        email = my_shipping['shipping_email']
+
+        shipping_address = (
+            f"{my_shipping['shipping_address1']}\n"
+            f"{my_shipping['shipping_address2']}\n"
+            f"{my_shipping['shipping_city']}\n"
+            f"{my_shipping['shipping_state']}\n"
+            f"{my_shipping['shipping_zipcode']}\n"
+            f"{my_shipping['shipping_country']}"
+        )
+
+        user = request.user if request.user.is_authenticated else None
+
+        # CREATE ORDER
+        order = Order.objects.create(
+            user=user,
+            full_name=full_name,
+            email=email,
+            shipping_address=shipping_address,
+            amount_paid=totals
+        )
+
+        # CREATE ORDER ITEMS
+        for product in cart_products:
+            product_id = product.id
+            price = product.sale_price if product.is_sale else product.price
+            quantity = quantities.get(str(product_id))
+
+            OrderItem.objects.create(
+                order=order,
+                product=product,
+                user=user,
+                quantity=quantity,
+                price=price
+            )
+
         messages.success(request, "Order Placed!")
         return redirect('home')
 
-
-    else:
-        messages.success(request, "Access Denied")
-        return redirect('home')
-
+    messages.error(request, "Access Denied")
+    return redirect('home')
 
 def billing_info(request):
     if request.POST:
