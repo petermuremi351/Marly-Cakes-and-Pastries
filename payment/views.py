@@ -6,6 +6,48 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from store.models import Product
 
+from django.http import HttpResponse
+
+from .utils import render_to_pdf
+
+
+def unshipped_orders_pdf(request):
+    if not request.user.is_superuser:
+        return HttpResponse("Access Denied")
+
+    orders = Order.objects.filter(shipped=False)
+
+    pdf = render_to_pdf(
+        "invoices/orders_invoice.html",
+        {
+            "orders": orders,
+            "title": "UNSHIPPED ORDERS INVOICE"
+        }
+    )
+
+    response = HttpResponse(pdf, content_type="application/pdf")
+    response["Content-Disposition"] = "attachment; filename=unshipped_orders.pdf"
+    return response
+
+
+def shipped_orders_pdf(request):
+    if not request.user.is_superuser:
+        return HttpResponse("Access Denied")
+
+    orders = Order.objects.filter(shipped=True)
+
+    pdf = render_to_pdf(
+        "invoices/orders_invoice.html",
+        {
+            "orders": orders,
+            "title": "SHIPPED ORDERS INVOICE"
+        }
+    )
+
+    response = HttpResponse(pdf, content_type="application/pdf")
+    response["Content-Disposition"] = "attachment; filename=shipped_orders.pdf"
+    return response
+
 
 def not_shipped_dash(request):
     if request.user.is_authenticated and request.user.is_superuser:
