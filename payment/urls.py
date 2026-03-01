@@ -10,4 +10,5 @@ urlpatterns = [
     path("not_shipped_dash", views.not_shipped_dash, name="not_shipped_dash"),
     path("invoice/unshipped/", views.unshipped_orders_pdf, name="unshipped_orders_pdf"),
     path("invoice/shipped/", views.shipped_orders_pdf, name="shipped_orders_pdf"),
+    path('orders/<int:pk>', views.orders, name='orders'),
 ]

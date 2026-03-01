@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <center>
+            <div class="col-8">
+
+                <br /><br />
+                <h3>Order</h3>
+                <div class="card">
+                    <div class="card-header">
+                        Order {{ order.id }} - ${{order.amount_paid}}
+                    </div>
+                    <!-- <div class="card-body">
+                        Email: {{ order.email }}<br/>
+                        {% if order.date_shipped %}
+                            Date Shipped: {{ order.date_shipped}}
+                        {% else %}    
+                            Date Ordered: {{ order.date_ordered }}
+                        {% endif %}
+                        <br/>
+                        {{order.full_name}}<br/>
+                        <pre>
+                        {{ order.shipping_address }}<br/>
+                        </pre>
+
+                        {% for item in items %}
+                            {{item.product}} - {{ item.quantity }} - ${{item.price}}<br/>
+
+
+                        {%endfor%}
+                        
+                        
+                    </div> -->
+
+                    <div class="card-body">
+
+                        <!-- Header -->
+                        <h5 class="card-title mb-3">Order Summary</h5>
+
+                        <!-- Meta info -->
+                        <p class="mb-1 text-muted small">
+                            <strong>Email:</strong> {{ order.email }}
+                        </p>
+
+                        <p class="mb-2 text-muted small">
+                            {% if order.date_shipped %}
+                            <strong>Date Shipped:</strong> {{ order.date_shipped }}
+                            {% else %}
+                            <strong>Date Ordered:</strong> {{ order.date_ordered }}
+                            {% endif %}
+                        </p>
+
+                        <hr>
+
+                        <!-- Customer -->
+                        <p class="mb-1">
+                            <strong>Customer Name</strong><br>
+                            {{ order.full_name }}
+                        </p>
+
+                        <!-- Address -->
+                        <p class="mb-2 mt-2"><strong>Shipping Address</strong></p>
+                        <div class="border rounded p-2 bg-light small mb-3">
+                            {{ order.shipping_address|linebreaks }}
+                        </div>
+
+                        <!-- Items -->
+                        <h6 class="mb-2">Items</h6>
+
+                        <table class="table table-sm align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="text-end">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in items %}
+                                <tr>
+                                    <td>{{ item.product }}</td>
+                                    <td class="text-center">{{ item.quantity }}</td>
+                                    <td class="text-end">Ksh {{ item.price }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+
+
+                </a>
+
+                <br /><br />
+            </div>
+        </center>
+    </div>
+</div>
+
+
+{% endblock %}

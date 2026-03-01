@@ -5,11 +5,21 @@ from payment.models import ShippingAddress, Order, OrderItem
 from django.contrib.auth.models import User
 from django.contrib import messages
 from store.models import Product
-
 from django.http import HttpResponse
-
 from .utils import render_to_pdf
 
+def orders(request, pk):
+    if request.user.is_authenticated and request.user.is_superuser:
+        # get the order
+        order = Order.objects.get(id=pk)
+        # get the order items
+        items = OrderItem.objects.filter(order=pk)
+        return render(request, 'orders.html', {"order":order, "items":items})
+    else:
+        messages.success(request, "Access Denied")
+        return redirect("home")
+
+    
 
 def unshipped_orders_pdf(request):
     if not request.user.is_superuser:
