@@ -4,7 +4,7 @@ from payment.forms import ShippingForm, PaymentForm
 from payment.models import ShippingAddress, Order, OrderItem
 from django.contrib.auth.models import User
 from django.contrib import messages
-from store.models import Product
+from store.models import Product, Profile
 from django.http import HttpResponse
 from .utils import render_to_pdf
 import datetime
@@ -174,6 +174,14 @@ def process_order(request):
                 if key == "session_key":
                     # delete the key
                     del request.session[key]
+
+            # delete cart from db(old cart)
+            current_user = Profile.objects.filter(user__id=request.user.id)
+            # delete shopping cart from db(od cart)
+            current_user.update(old_cart="")
+
+
+                    
 
             messages.success(request, "Order Placed!")
             return redirect("home")
