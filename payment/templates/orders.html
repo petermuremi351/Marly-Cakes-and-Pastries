@@ -86,8 +86,27 @@
                                     <td class="text-end">Ksh {{ item.price }}</td>
                                 </tr>
                                 {% endfor %}
+
                             </tbody>
                         </table>
+                        <br /><br />
+                        {% if not order.shipped %}
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="shipping_status" value="true">
+                            <button type="submit" class="btn btn-success">Mark As Shipped</button>
+                        </form>
+
+                        {% else %}
+                        <!-- not shipped -->
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="shipping_status" value="false">
+                            <button type="submit" class="btn btn-danger">Mark As Shipped</button>
+                        </form>
+                        {% endif %}
+
+
 
                     </div>
                 </div>
