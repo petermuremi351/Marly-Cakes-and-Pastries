@@ -17,8 +17,8 @@ SECRET_KEY = 'django-insecure-yps4k5246nnw%j%bao6!l**!69f0c42wa8jo9*q5)l^5a(wy47
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-CSRF_TRUSTED_ORIGINS = []
+ALLOWED_HOSTS = ['marlyi-cakes-and-pastries.up.railway.app', 'https://marlyi-cakes-and-pastries.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['marlyi-cakes-and-pastries.up.railway.app', 'https://marlyi-cakes-and-pastries.up.railway.app']
 
 
 # Application definition
