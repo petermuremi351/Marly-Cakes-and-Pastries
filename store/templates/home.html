@@ -13,93 +13,59 @@
 
 
         <section class="py-5">
-            <div class="container px-4 px-lg-5 mt-5">
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                    {% for product in products %}
-                        {%if product.is_sale%}
-                        <div class="col mb-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            {% for product in products %}
+                <div class="col mb-5">
+                    <!-- Wrap the whole card in a link -->
+                    <a href="{% url 'product' product.id %}" class="text-decoration-none text-dark">
                         <div class="card h-100">
-                            <!-- sale budge -->
-                             <div class="badge bg-dark text-white position-absolute"
-                             style="top:0.5rem; right: 0.5rem">Sale</div>
-                            
-                             <!-- Product image-->
-                            <img class="card-img-top" src="{{product.image.url}}" alt="..." />
-                            <!-- Product details-->
+                            {% if product.is_sale %}
+                            <!-- Sale badge -->
+                            <div class="badge bg-dark text-white position-absolute"
+                                style="top:0.5rem; right:0.5rem">Sale</div>
+                            {% endif %}
+
+                            <!-- Product image -->
+                            <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.name }}" />
+
+                            <!-- Product details -->
                             <div class="card-body p-4">
                                 <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">{{product.name}}</h5>
-                                    <!-- sale -->
-                                     <div class="d-flex
-                                     justify-content-center small
-                                     text-warning mb-2">
-                                     <div class="bi-star-fill"></div>
-                                     &nbsp;&nbsp;Offer!&nbsp;&nbsp;
-                                     <div class="bi-star-fill"></div>
-                                     </div>
+                                    <h5 class="fw-bolder">{{ product.name }}</h5>
 
-                                    <!-- Product price-->
-                                     <strike>
-                                    Ksh{{product.price}}
-                                    </strike>
-                                    &nbsp;
-                                    Ksh{{product.sale_price}}
-                                </br>
-                                {{product.description}}
-                             </br>
-                        
-                                <h6 >{{product.Category}}</h6>                          
-                                  </div>
+                                    {% if product.is_sale %}
+                                    <div class="d-flex justify-content-center small text-warning mb-2">
+                                        <div class="bi-star-fill"></div>
+                                        &nbsp;&nbsp;Offer!&nbsp;&nbsp;
+                                        <div class="bi-star-fill"></div>
+                                    </div>
+
+                                    <strike class="text-muted fs-6">Ksh {{ product.price }}</strike>
+                                    &nbsp;<span class="fw-bold fs-5 text-dark">Ksh {{ product.sale_price }}</span>
+                                    {% else %}
+                                    <span class="fw-bold fs-5 text-dark">Ksh {{ product.price }}</span>
+                                    {% endif %}
+
+                                    <br>
+                                    {{ product.description }}
+                                    <br>
+                                    <h6>{{ product.Category }}</h6>
+                                </div>
                             </div>
-                            <!-- Product actions-->
+
+                            <!-- Product actions (optional, can keep button if you want) -->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'product' product.id %}">View Product</a></div>
-                            </div>
-                        </div>
-                    </div>
-                        {%else%} 
-                        <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- sale budge -->
-                             <div class="badge bg-dark text-white position-absolute"
-                             style="top:0.5rem; right: 0.5rem">Sale</div>
-                            
-                             <!-- Product image-->
-                            <img class="card-img-top" src="{{product.image.url}}" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
                                 <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">{{product.name}}</h5>
-                                    
-
-                                    <!-- Product price-->
-
-                                    Ksh{{product.price}}
-                                    
-                                </br>
-                                {{product.description}}
-                             </br>
-                        
-                                <h6 >{{product.Category}}</h6>                          
-                                  </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'product' product.id %}">View Product</a></div>
+                                    <span class="btn btn-outline-dark mt-auto">View Product</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    
-                    
-                    {% endif %}
-                    {% endfor %}
+                    </a>
                 </div>
-                
-            </div>
-            
-        </section>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 
 {% endblock %}

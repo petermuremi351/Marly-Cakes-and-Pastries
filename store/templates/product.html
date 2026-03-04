@@ -19,9 +19,9 @@
                         <div class="bi-star-fill"></div>
                     </div>
                     <strike>Ksh {{ product.price }}</strike>
-                    &nbsp;Ksh {{ product.sale_price }}
+                    &nbsp;<span class="fw-bold">Ksh{{product.sale_price}}</span> 
                     {% else %}
-                        Ksh {{ product.price }}
+                         <span class="fw-bold">Ksh{{ product.price }}</span>
 
                     {% endif %}
                      <br /><br />
