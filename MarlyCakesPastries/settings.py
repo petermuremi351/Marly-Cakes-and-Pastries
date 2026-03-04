@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 # load our environmental variables
-load_dotenv()
+# load_dotenv()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -18,7 +18,7 @@ SECRET_KEY = 'django-insecure-yps4k5246nnw%j%bao6!l**!69f0c42wa8jo9*q5)l^5a(wy47
 DEBUG = True
 
 ALLOWED_HOSTS = []
-CSRF_TRUSTED_ORIGINS = []
+# CSRF_TRUSTED_ORIGINS = ['marlyi-cakes-and-pastries.up.railway.app', 'https://marlyi-cakes-and-pastries.up.railway.app']
 
 
 # Application definition
@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'store',
     'cart',
     'payment',
-    'whitenoise.runserver_nostatic',
+    # 'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
@@ -44,7 +44,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
+    # 'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'MarlyCakesPastries.urls'
@@ -73,14 +73,14 @@ WSGI_APPLICATION = 'MarlyCakesPastries.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': 'postgres',
-        'PASSWORD': os.environ.get('DB_PASSWORD_MY'),
-        'HOST': 'postgres.railway.internal',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': 'railway',
+        # 'USER': 'postgres',
+        # 'PASSWORD': os.environ.get('DB_PASSWORD_MY'),
+        # 'HOST': 'postgres.railway.internal',
+        # 'PORT': '5432',
 
     }
 }
