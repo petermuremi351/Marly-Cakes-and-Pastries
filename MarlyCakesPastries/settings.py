@@ -18,7 +18,11 @@ SECRET_KEY = 'django-insecure-yps4k5246nnw%j%bao6!l**!69f0c42wa8jo9*q5)l^5a(wy47
 DEBUG = True
 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "doretta-unpulverable-eldora.ngrok-free.dev",
+    "localhost",
+    "127.0.0.1"
+]
 
 
 
