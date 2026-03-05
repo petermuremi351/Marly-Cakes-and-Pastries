@@ -1,1 +1,54 @@
-<h1>Payment Success</h1>
+{% extends 'base.html'%}
+
+{% block content %}
+
+<header class="bg-success py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Payment Successful!</h1>
+            <p class="lead fw-normal text-white-50 mb-0">
+                Thank you for your purchase. Your cake order has been received and is now being processed.
+            </p>
+        </div>
+    </div>
+</header>
+
+<br />
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+
+            <div class="card shadow border-0">
+                <div class="card-body text-center">
+
+                    <h3 class="text-success mb-3">Order Confirmed 🎉</h3>
+
+                    <p class="text-muted">
+                        Your payment has been completed successfully.  
+                        Our bakery team is preparing your order and you will receive confirmation shortly.
+                    </p>
+
+                    <br>
+
+                    <center>
+                        {{ paypal_form.render }}
+                    </center>
+
+                    <br>
+
+                    <a href="{% url 'home' %}" class="btn btn-success mt-3">
+                        Continue Shopping
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<br><br>
+
+{% endblock %} 
+ 
