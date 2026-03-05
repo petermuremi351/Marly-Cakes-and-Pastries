@@ -2,6 +2,13 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+# from decouple import config
+
+# MPESA_CONSUMER_KEY = config("MPESA_CONSUMER_KEY")
+# MPESA_CONSUMER_SECRET = config("MPESA_CONSUMER_SECRET")
+# MPESA_SHORTCODE = config("MPESA_SHORTCODE")
+# MPESA_PASSKEY = config("MPESA_PASSKEY")
+# MPESA_CALLBACK_URL = config("MPESA_CALLBACK_URL")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,7 +49,8 @@ INSTALLED_APPS = [
     'store',
     'cart',
     'payment',
-    # 'whitenoise.runserver_nostatic',
+    'paypal.standard.ipn',
+    
 ]
 
 MIDDLEWARE = [
@@ -84,12 +92,6 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-        # 'ENGINE': 'django.db.backends.postgresql',
-        # 'NAME': 'railway',
-        # 'USER': 'postgres',
-        # 'PASSWORD': os.environ.get('DB_PASSWORD_MY'),
-        # 'HOST': 'postgres.railway.internal',
-        # 'PORT': '5432',
 
     }
 }
@@ -138,3 +140,10 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# add paypal settings
+# set sendbox to True
+
+PAYPAL_TEST = True
+
+PAYPAL_RECEIVER_EMAIL = 'businessmarlyi@gmail.com'
