@@ -13,4 +13,6 @@ urlpatterns = [
     path("invoice/shipped/", views.shipped_orders_pdf, name="shipped_orders_pdf"),
     path('orders/<int:pk>', views.orders, name='orders'),
     path('paypal', include("paypal.standard.ipn.urls")),
+    path('mpesa/', views.mpesa_payment, name='mpesa_payment'),
+    path('callback/', views.mpesa_callback, name='mpesa_callback'),
 ]

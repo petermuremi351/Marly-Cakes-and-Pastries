@@ -383,6 +383,57 @@ from paypal.standard.forms import PayPalPaymentsForm
 from django.conf import settings
 import uuid # unique user id for duplictate orders
 
+# mpesa daraja
+from django.http import HttpResponse
+from django_daraja.mpesa.core import MpesaClient
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+# # views for mpesa
+# def mpesa_payment(request):
+#     cl = MpesaClient()
+#     # Use a Safaricom phone number that you have access to, for you to be able to view the prompt.
+#     phone_number = '254708374149'
+#     amount = 1
+#     account_reference = 'reference'
+#     transaction_desc = 'Description'
+#     callback_url = 'https://api.darajambili.com/express-payment'
+#     response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
+#     return HttpResponse(response)
+cl = MpesaClient()
+
+def mpesa_payment(request):
+    phone_number = '254708374149'  # sandbox number
+    amount = 1
+    account_reference = 'Order123'
+    transaction_desc = 'Cake Purchase'
+    callback_url = 'https://doretta-unpulverable-eldora.ngrok-free.dev/payment/callback/'
+
+    try:
+        response = cl.stk_push(
+            phone_number=phone_number,
+            amount=amount,
+            account_reference=account_reference,
+            transaction_desc=transaction_desc,
+            callback_url=callback_url
+        )
+        return JsonResponse({"message": response.response_description})
+    except Exception as e:
+        return JsonResponse({"error": str(e)})
+
+@csrf_exempt  # Daraja sends POST from outside, so CSRF is skipped
+def mpesa_callback(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        # Here you can parse the payment result and update your order
+        print("STK Push callback received:", data)
+        # Example: mark order as paid
+        # order = Order.objects.get(id=data['AccountReference'])
+        # order.status = 'Paid'
+        # order.save()
+        return JsonResponse({"Result": "Success"})
+    return JsonResponse({"error": "Invalid request"})
 
 def unshipped_orders_pdf(request):
     if not request.user.is_superuser:
@@ -473,7 +524,7 @@ def not_shipped_dash(request):
 			messages.success(request, "Shipping Status Updated")
 			return redirect('home')
 
-		return render(request, "payment/not_shipped_dash.html", {"orders":orders})
+		return render(request, "not_shipped_dash.html", {"orders":orders})
 	else:
 		messages.success(request, "Access Denied")
 		return redirect('home')

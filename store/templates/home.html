@@ -2,64 +2,47 @@
 
 {% block content %}
 
- <header class="py-5" style="background-color:#eb9dad;">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Fresh Cakes & Pastries</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Baked with love every day</p>
-                </div>
-            </div>
- </header>
+<header class="py-5" style="background-color:#eb9dad;">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Fresh Cakes & Pastries</h1>
+            <p class="lead fw-normal text-white-50 mb-0"></p>
+        </div>
+    </div>
+</header>
 
 
-        <section class="py-5">
+<section class="py-5">
     <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
             {% for product in products %}
                 <div class="col mb-5">
-                    <!-- Wrap the whole card in a link -->
+                    <!-- Card wrapped in link -->
                     <a href="{% url 'product' product.id %}" class="text-decoration-none text-dark">
-                        <div class="card h-100">
+                        <div class="card h-100 position-relative product-card">
+
                             {% if product.is_sale %}
-                            <!-- Sale badge -->
-                            <div class="badge bg-dark text-white position-absolute"
-                                style="top:0.5rem; right:0.5rem">Sale</div>
+                                <!-- Small sale badge -->
+                                <div class="badge bg-danger text-white position-absolute"
+                                     style="top:0.5rem; right:0.5rem; font-size:0.8rem;">Offer</div>
                             {% endif %}
 
                             <!-- Product image -->
                             <img class="card-img-top" src="{{ product.image.url }}" alt="{{ product.name }}" />
 
-                            <!-- Product details -->
-                            <div class="card-body p-4">
+                            <!-- Product name and price -->
+                            <div class="card-body p-3">
                                 <div class="text-center">
-                                    <h5 class="fw-bolder">{{ product.name }}</h5>
-
+                                    <h6 class="fw-bold mb-2">{{ product.name }}</h6>
                                     {% if product.is_sale %}
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        &nbsp;&nbsp;Offer!&nbsp;&nbsp;
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-
-                                    <strike class="text-muted fs-5">Ksh {{ product.price }}</strike>
-                                    &nbsp;<span class="fw-bold fs-5 text-dark">Ksh {{ product.sale_price }}</span>
+                                        <span class="text-muted text-decoration-line-through">Ksh {{ product.price }}</span>
+                                        &nbsp;<span >Ksh {{ product.sale_price }}</span>
                                     {% else %}
-                                    <span class="fw-bold fs-5 text-dark">Ksh {{ product.price }}</span>
+                                        <span >Ksh {{ product.price }}</span>
                                     {% endif %}
-
-                                    <br>
-                                    {{ product.description }}
-                                    <br>
-                                    <h6>{{ product.Category }}</h6>
                                 </div>
                             </div>
 
-                            <!-- Product actions (optional, can keep button if you want) -->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center">
-                                    <span class="btn btn-outline-dark mt-auto">View Product</span>
-                                </div>
-                            </div>
                         </div>
                     </a>
                 </div>
@@ -67,5 +50,16 @@
         </div>
     </div>
 </section>
+
+<!-- Add this CSS at the bottom of your template or in a CSS file -->
+<style>
+.product-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.product-card:hover {
+    transform: scale(1.05); /* Slight zoom */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2); /* Subtle shadow */
+}
+</style>
 
 {% endblock %}

@@ -67,6 +67,22 @@
             <center>
                 {{paypal_form.render}}
             </center>
+
+            <div style="text-align:center;">
+    <form id="mpesa-form" method="POST" action="{% url 'mpesa_payment' %}">
+        {% csrf_token %}
+        <input type="text" name="phone" placeholder="Enter phone number" required>
+        <button type="submit" style="
+            background-color:#f7941d; 
+            color:white; 
+            padding:10px 20px; 
+            border:none; 
+            border-radius:5px;
+        ">
+            Pay with M-Pesa
+        </button>
+    </form>
+</div>
             <br /><br/>
             <!-- <div class="card">
                 <div class="card-header">
